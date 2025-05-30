@@ -15,7 +15,7 @@ namespace Center.Graduation.API.Controllers
 {
     public class AccountController : BaseController
     {
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager; //
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ITokenService _tokenServices;
         private readonly IMapper _mapper;
