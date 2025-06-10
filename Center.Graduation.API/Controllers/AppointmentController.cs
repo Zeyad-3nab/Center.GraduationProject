@@ -66,14 +66,47 @@ namespace Center.Graduation.API.Controllers
 
         [Authorize]
         [HttpGet("GetDoctorAppointment")]
-        public async Task<ActionResult<IEnumerable<Appointment>>> GetDoctorAppointments(string DoctorId) 
+        public async Task<ActionResult<IEnumerable<GetAppointment>>> GetDoctorAppointments(string DoctorId) 
         {
             var Doctor = await _userManager.FindByIdAsync(DoctorId);
             if(Doctor is null) 
                 return NotFound("Doctor With this Id is not found");
 
             var Appoinments = await _unitOfWork.appointmentRepository.GetAllAppointmentOfDoctor(DoctorId);
-            return Ok(Appoinments);
+            var map = _mapper.Map<IEnumerable<GetAppointment>>(Appoinments);
+            return Ok(map);
+        }
+
+
+        [Authorize]
+        [HttpGet("GetPatientAppointment")]
+        public async Task<ActionResult<IEnumerable<GetAppointment>>> GetPatientAppointments(string PatientId)
+        {
+            var Doctor = await _userManager.FindByIdAsync(PatientId);
+            if (Doctor is null)
+                return NotFound("Patient With this Id is not found");
+
+            var Appoinments = await _unitOfWork.appointmentRepository.GetAllAppointmentOfDoctor(PatientId);
+            var map = _mapper.Map<IEnumerable<GetAppointment>>(Appoinments);
+            return Ok(map);
+        }
+
+
+        [Authorize]
+        [HttpGet("GetPatientAppointmentsWithDoctor")]
+        public async Task<ActionResult<IEnumerable<GetAppointment>>> GetPatientAppointmentsWithDoctor(string DoctorId ,string PatientId)
+        {
+            var Doctor = await _userManager.FindByIdAsync(DoctorId);
+            if (Doctor is null)
+                return NotFound("Patient With this Id is not found");
+
+            var Patient = await _userManager.FindByIdAsync(PatientId);
+            if (Doctor is null)
+                return NotFound("Doctor With this Id is not found");
+
+            var Appoinments = await _unitOfWork.appointmentRepository.GatAllPatientAppointmentWithDoctor( DoctorId, PatientId);
+            var map = _mapper.Map<IEnumerable<GetAppointment>>(Appoinments);
+            return Ok(map);
         }
 
         [Authorize]

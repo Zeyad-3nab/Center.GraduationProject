@@ -59,7 +59,7 @@ namespace Center.Graduation.API.Controllers
 
         [Authorize]
         [HttpGet("GetContactUsers")]
-        public async Task<ActionResult<IEnumerable<GetUserDTO>>> GetContactUsers()
+        public async Task<ActionResult<IEnumerable<GetContactUser>>> GetContactUsers()
         {
 
             var UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -67,7 +67,12 @@ namespace Center.Graduation.API.Controllers
                 return BadRequest(new ApiErrorResponse(StatusCodes.Status400BadRequest, "Invalid to get Users please sure a sign in "));
 
             var users = await _ChatRepository.GetContactedUserAsync(UserId);
-            var map = _mapper.Map<IEnumerable<GetUserDTO>>(users);
+
+            var baseUrl = $"{Request.Scheme}://{Request.Host}";
+            var map = _mapper.Map<IEnumerable<GetContactUser>>(users, opt =>
+            {
+                opt.Items["BaseUrl"] = baseUrl;
+            });
             return Ok(map);
         }
 

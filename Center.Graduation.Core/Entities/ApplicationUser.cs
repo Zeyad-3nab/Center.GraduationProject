@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Center.Graduation.Core.Entities
 {
-    public class ApplicationUser:IdentityUser
+    public class ApplicationUser:IdentityUser     // userName     Email    Password    PhoneNumber 
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }

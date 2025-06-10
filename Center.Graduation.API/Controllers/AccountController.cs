@@ -46,7 +46,6 @@ namespace Center.Graduation.API.Controllers
             return Ok(map);
         }
 
-
         [HttpGet("GetAllDoctors")]
         public async Task<ActionResult<IEnumerable<GetUserDTO>>> GetAllDoctors()
         {
@@ -58,11 +57,16 @@ namespace Center.Graduation.API.Controllers
             });
             return Ok(map);
         }
+
         [HttpGet("GetAllPatients")]
         public async Task<ActionResult<IEnumerable<GetUserDTO>>> GetAllPatients()
         {
             var users = await _userManager.GetUsersInRoleAsync("Patient");
-            var map = _mapper.Map<IEnumerable<GetUserDTO>>(users);
+            var baseUrl = $"{Request.Scheme}://{Request.Host}";
+            var map = _mapper.Map<IEnumerable<GetUserDTO>>(users, opt =>
+            {
+                opt.Items["BaseUrl"] = baseUrl;
+            });
             return Ok(map);
         }
 
@@ -89,7 +93,6 @@ namespace Center.Graduation.API.Controllers
             });
             return Ok(map);
         }
-
 
         [AllowAnonymous]
         [HttpGet("GetUserById")]
@@ -118,7 +121,6 @@ namespace Center.Graduation.API.Controllers
                      .Select(e => e.ErrorMessage)
                      .ToList()));
         }
-
 
         [AllowAnonymous]
         [HttpPost("login")]
@@ -150,8 +152,6 @@ namespace Center.Graduation.API.Controllers
                .ToList()));
         }
 
-
-        // Register
         [AllowAnonymous]
         [HttpPost("DoctorRegister")]
         public async Task<ActionResult<UserDTO>> DoctorRegister(RegisterDoctorDTO model)
@@ -199,7 +199,6 @@ namespace Center.Graduation.API.Controllers
                      .ToList()));
         }
 
-
         [AllowAnonymous]
         [HttpPost("PatientRegister")]
         public async Task<ActionResult<UserDTO>> PatientRegister(RegisterPatientDTO model)
@@ -246,7 +245,6 @@ namespace Center.Graduation.API.Controllers
                      .ToList()));
         }
 
-
         [HttpGet("emailExists")]
         public async Task<ActionResult<bool>> CheckEmailExists(string Email)
         {
@@ -254,8 +252,6 @@ namespace Center.Graduation.API.Controllers
             if (user is null) return false;
             else return true;
         }
-
-
 
         [Authorize(Roles = "Admin")]
         [HttpDelete("DeleteUser")]
@@ -284,7 +280,6 @@ namespace Center.Graduation.API.Controllers
                 .Select(e => e.ErrorMessage)
                 .ToList()));
         }
-
 
         [AllowAnonymous]
         [HttpPost("SendEmail")]
@@ -316,8 +311,6 @@ namespace Center.Graduation.API.Controllers
                 .Select(e => e.ErrorMessage)
                 .ToList()));
         }
-
-
 
         [AllowAnonymous]
         [HttpPut("ChangePassword")]
@@ -351,8 +344,6 @@ namespace Center.Graduation.API.Controllers
                 .ToList()));
         }
 
-
-
         [HttpGet("UserRoles")]
         public async Task<ActionResult> GetUserRoles(string Email)
         {
@@ -373,8 +364,6 @@ namespace Center.Graduation.API.Controllers
                              .Select(e => e.ErrorMessage)
                              .ToList()));
         }
-
-
 
         [AllowAnonymous]
         [HttpPost("AddToRole")]
@@ -404,6 +393,5 @@ namespace Center.Graduation.API.Controllers
                               .Select(e => e.ErrorMessage)
                               .ToList()));
         }
-
     }
 }

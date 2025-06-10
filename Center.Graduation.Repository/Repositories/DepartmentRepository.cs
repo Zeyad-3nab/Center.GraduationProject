@@ -19,6 +19,8 @@ namespace Center.Graduation.Repository.Repositories
         {
             _context = context;
         }
+
+
         public async Task<int> AddAsync(Department entity)
         {
             await _context.Departments.AddAsync(entity);
@@ -27,7 +29,7 @@ namespace Center.Graduation.Repository.Repositories
         public async Task<int> UpdateAsync(Department entity)
         {
             _context.Departments.Update(entity);
-            return await _context.SaveChangesAsync();
+            return await _context.SaveChangesAsync();    
         }
 
         public async Task<int> DeleteAsync(Department entity)

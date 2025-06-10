@@ -16,7 +16,7 @@ namespace Center.Graduation.Repository.Data.Configurations
 
             builder.HasOne(e => e.Department)
                 .WithMany()
-                .HasForeignKey(e => e.DepartmentId).IsRequired(false);
+                .HasForeignKey(e => e.DepartmentId).IsRequired(false);    //1 to m   fk m  set one 
 
 
 

@@ -2,6 +2,7 @@
 using Center.Graduation.API.Extension;
 using Center.Graduation.API.Helper;
 using Center.Graduation.Repository.Contexts;
+using Center.Graduation.Repository.RealTime;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 
@@ -14,62 +15,61 @@ namespace Center.Graduation.API
             var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
             var builder = WebApplication.CreateBuilder(args);
-
-            //Allow all people
+            // Configure CORS
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy(name: MyAllowSpecificOrigins,
                                   policy =>
                                   {
-                                      policy.WithOrigins("http://localhost:3000" , "https://tumortraker12.runasp.net/" , "http://tumortraker12.runasp.net/");
+                                      policy.WithOrigins(
+                                          "http://localhost:3000",
+                                          "http://localhost:5173",
+                                          "http://localhost:5173/",
+                                          "http://localhost:5175",
+                                          "https://tumortrackerfrontendproject-up4q.vercel.app/",
+                                          "https://tumortrackerfrontendproject-up4q.vercel.app",
+                                          "https://tumortraker12.runasp.net/",
+                                          "http://tumortraker12.runasp.net"
+                                      );
                                       policy.AllowAnyMethod();
                                       policy.AllowAnyHeader();
                                       policy.AllowCredentials();
                                   });
             });
 
-            // Add services to the container.
+            // Add SignalR
             builder.Services.AddSignalR();
 
+            // Add Controllers
             builder.Services.AddControllers()
                   .AddJsonOptions(options =>
                   {
-                      options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()); // ·ﬁ—«¡… «·‹ Enum ﬂ‹ String/Number
+                      options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                       options.JsonSerializerOptions.Converters.Add(new TimeOnlyJsonConverter());
                   });
 
-
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+            // Swagger/OpenAPI
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-
+            // Database Context
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
             {
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));   //Scoped object ber request
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
 
-
+            // Custom Services and Auth
             builder.Services.AddApplicationServices(builder.Configuration);
-
-            //Add Swagger Extention
             builder.Services.AddSwaggerGenJwtAuth();
-
-            //Add Custom Extention
             builder.Services.AddCustomJwtAuth(builder.Configuration);
-
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
-            //if (app.Environment.IsDevelopment())
-            //{
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            //}
+            // Middleware pipeline
+            app.UseSwagger();
+            app.UseSwaggerUI();
 
             app.UseStaticFiles();
-
             app.UseHttpsRedirection();
 
             app.UseCors(MyAllowSpecificOrigins);
@@ -77,6 +77,7 @@ namespace Center.Graduation.API
             app.UseAuthorization();
 
             app.MapControllers();
+            app.MapHub<ChatHub>("/chatHub");
 
             app.Run();
         }

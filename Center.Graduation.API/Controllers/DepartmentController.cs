@@ -20,7 +20,7 @@ namespace Center.Graduation.API.Controllers
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
-
+           //end points 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<DepartmentDTO>>> GetAll()
         {

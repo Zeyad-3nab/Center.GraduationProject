@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Center.Graduation.API.DTOs;
 using Center.Graduation.API.DTOs.AccountDTO;
+using Center.Graduation.API.DTOs.Appointment;
 using Center.Graduation.API.DTOs.ChatMessages;
 using Center.Graduation.API.DTOs.Department;
 using Center.Graduation.API.DTOs.DoctorWorkTime;
@@ -36,6 +37,21 @@ namespace Center.Graduation.API.Mapping
                 .ForMember(c => c.SenderName, opt => opt.MapFrom(src => src.Sender.UserName))
                 .ForMember(c => c.ReceiverName, opt => opt.MapFrom(src => src.Receiver.UserName));
 
+
+            CreateMap<Appointment, GetAppointment>()
+                .ForMember(a => a.PatientName, opt => opt.MapFrom(src => src.Patient.UserName))
+                .ForMember(a => a.DoctorName, opt => opt.MapFrom(src => src.Doctor.UserName));
+
+
+
+            CreateMap<ApplicationUser, GetContactUser>()
+                .ForMember(dest => dest.PhotoURL, opt => opt.MapFrom(
+                    (src, dest, destMember, context) =>
+                    {
+                        var baseUrl = context.Items["BaseUrl"] as string;
+                        return string.IsNullOrEmpty(src.PhotoURL) ? null : $"{baseUrl}/Images/{src.PhotoURL}";
+
+                    }));
         }
     
     }

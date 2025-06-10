@@ -145,7 +145,7 @@ namespace Center.Graduation.Repository.Data.Migrations
 
                     b.HasIndex("PatientId");
 
-                    b.ToTable("Appointments");
+                    b.ToTable("Appointments", (string)null);
                 });
 
             modelBuilder.Entity("Center.Graduation.Core.Entities.ChatMessage", b =>
@@ -177,7 +177,7 @@ namespace Center.Graduation.Repository.Data.Migrations
 
                     b.HasIndex("SenderId");
 
-                    b.ToTable("ChatMessages");
+                    b.ToTable("ChatMessages", (string)null);
                 });
 
             modelBuilder.Entity("Center.Graduation.Core.Entities.Department", b =>
@@ -194,7 +194,7 @@ namespace Center.Graduation.Repository.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Departments");
+                    b.ToTable("Departments", (string)null);
                 });
 
             modelBuilder.Entity("Center.Graduation.Core.Entities.DoctorWorkTime", b =>
@@ -227,7 +227,7 @@ namespace Center.Graduation.Repository.Data.Migrations
 
                     b.HasIndex("DoctorId");
 
-                    b.ToTable("DoctorWorkTimes");
+                    b.ToTable("DoctorWorkTimes", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
